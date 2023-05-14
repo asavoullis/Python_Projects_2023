@@ -1,13 +1,6 @@
-Your resilience in the face of challenges showcases your inner strength.
-Example: I've witnessed your ability to bounce back from tough situations, and it's truly impressive.
+# super and inheritance
 
-Your patience and understanding in conversations create a comfortable environment.
-Example: Your willingness to listen and give others space to express themselves is a rare quality.
 
-Your unwavering determination is a driving force behind your achievements.
-Example: Your persistent pursuit of your goals is both inspiring and motivating.
-
-Your compassion for others is a true testament to your # super and inheritance
 class Base:
     @classmethod
     def f(self, x):
