@@ -1,0 +1,10 @@
+Software development is the process of creating, designing, and maintaining computer programs and applications.
+Coding involves writing instructions in a programming language to create software solutions.
+Version control systems like Git help developers collaborate on code, track changes, and manage projects efficiently.
+Debugging is a crucial skill in software development, involving finding and fixing errors in code to ensure its functionality.
+Agile methodologies promote iterative development, allowing teams to adapt and deliver working software in short cycles.
+Object-oriented programming (OOP) emphasizes organizing code into reusable objects, enhancing modularity and maintainability.
+APIs (Application Programming Interfaces) enable different software components to communicate and interact with each other.
+Continuous Integration (CI) and Continuous Deployment (CD) practices streamline development by automating testing and deployment.
+Algorithms and data structures are fundamental to solving complex problems efficiently and optimizing software performance.
+Documentation is essential in software development, providing clear explanations of code, functionality, and usage for developers and users alike.
