@@ -95,8 +95,32 @@ class Person3:
 #######################################################################
 """ Why python has no REAL PRIVATE Methods """
 class User:
+    # this is considered a private method
     def __foo(self):
         print("Hello")
+
+
+####################################################################
+# super and inheritance
+class Base:
+    @classmethod
+    def f(self, x):
+        print("Base.f", self, x)
+
+class Derived(Base):
+    @classmethod
+    def f(self, x):
+        print("Derived.f", self, x)
+
+        # instead of copy pasting code from the base class which introduces redundant code and is also very error-prone
+        # print("Base.f", self, x)
+        # we instead use super
+
+        # this is going to call base.f(x)
+        super().f(x)
+        # do not use super().f(self, x) because its automatically filled
+        print("Derived.f finished")
+
 
 
 # this is how you call the init method
@@ -152,6 +176,17 @@ if __name__ == "__main__":
 
     
     # display of private method
+
+    # instance of the class
     user = User()
+    # this will not work
     # user.__foo()
+
+    # but it will work like this  ._ClassName__funcionName()
+    # this is called name angling
     user._User__foo()
+    print("\n")
+
+    
+    d = Derived()
+    d.f(42)
