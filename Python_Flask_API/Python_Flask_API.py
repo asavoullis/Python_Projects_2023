@@ -32,8 +32,9 @@ def home():
 # PUT - Update a resource (Alter or modify existing data)
 # DELETE - Delete a resource - (Delete or Remove data from a database or resource that we are accessing)
 
+""" https://www.youtube.com/watch?v=zsYIw6RXjfM  Testing APIs : POSTMAN """
 
-
+# GET REQEST API
 # a path parameter is a dynamic value that you can pass in the path of a URL that we'll be able to access inside of our route
 # in this case <user_id>
 @app.route("/get-user/<user_id>")
@@ -57,6 +58,20 @@ def get_user(user_id):
     # 200 is the default status code of success but you can pass other HTTP status codes as well
     return jsonify(user_data), 200
 
+# POST REQEST API
+# since we are not using the default get request method we have to actually specify the accepted method for this route, method=Post
+# @app.route("/create-user", methods=["POST", "GET"])
+@app.route("/create-user", methods=["POST"])
+def create_user():
+    """
+    We are receiving some data from the user, we can add it to a database if we wanted
+    """
+
+    # we can do this if we have multiple methods
+    # if request.method == "POST":
+
+    data = request.get_json()
+    return jsonify(data), 201
 
 
 if __name__ == '__main__':
