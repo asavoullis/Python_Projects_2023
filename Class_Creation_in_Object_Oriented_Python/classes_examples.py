@@ -43,14 +43,23 @@ class Car_advanced:
         self.model = model
         self.color = color
         self.year = year
-        self.price = price
+        self._price = price
 
-    # @property
-    # def price(self):
-    #     return self.price
+    # getter
+    @property
+    def price(self):
+        return self._price
+    
+    # setter
+    @price.setter
+    def price(self, p):
+        if (p <= 0):
+            raise ValueError("Price is zero or less!")
+        print("Setter for price called")
+        self._price = p
     
 
-# Example 4: 
+# Example of Task3: 
 class Product:
     # constructor function
     def __init__(self, name, price):
@@ -70,19 +79,108 @@ class Product:
     def get_details(self):
         return f"Product: {self._name}, Price: {self._price}"
 
+
+# Task 4: Create String Representation
+class Car_adv2:
+    """
+    Use str method to create a string representation of the object __str__
+    """
+    def __init__(self, make = "unkown", model = "unknown", color = "unknown", year = -1, price = -1):
+        self.make = make
+        self.model = model
+        self.color = color
+        self.year = year
+        self._price = price
+    
+    # getter
+    @property
+    def price(self):
+        return self._price
+    
+    # setter
+    @price.setter
+    def price(self, p):
+        if (p <= 0):
+            raise ValueError("Price is zero or less!")
+        print("Setter for price called")
+        self._price = p
+
+    def __str__(self):
+        return "car(make = " + self.make + ", model = " + str(self.model) + ", color = " + str(self.color) + ", year = " + str(self.year) + ", price = " + str(self.price) + ")"
+
+
+# Task 5: Sorting Objects
+class Car_adv3:
+    """
+    Read data from file
+    Extract data from each entry
+    Create the object from the entry
+    Add the object to the list
+    Sort the list of objects and print them
+    """
+    def __init__(self, make = "unkown", model = "unknown", color = "unknown", year = -1, price = -1):
+        self.make = make
+        self.model = model
+        self.color = color
+        self.year = year
+        self._price = price
+    
+    # getter
+    @property
+    def price(self):
+        return self._price
+    
+    # setter
+    @price.setter
+    def price(self, p):
+        if (p <= 0):
+            raise ValueError("Price is zero or less!")
+        print("Setter for price called")
+        self._price = p
+
+    def __str__(self):
+        return "car(make = " + self.make + ", model = " + str(self.model) + ", color = " + str(self.color) + ", year = " + str(self.year) + ", price = " + str(self.price) + ")"
+
+
+
+
 car1 = Car_default()
 car2 = Car()
 car3 = Car("mazda", "mx5", "red", "2000", "15000")
-car4 = Car_advanced()
+
 
 print("\nModel = " + car1.model)
-print("\n", car2.model)
-print("\n", car3.model, "£" + car3.price)
+print("\n" + car2.model)
+print("\n" + car3.model, "£" + car3.price)
 
 # Example usage:
 p = Product("Widget", 15)
-print("\n", p.get_details())
+print("\n"+ p.get_details())
 
 p.price = 20  # Setting the price using the setter
 print(p.price)  # Output: 20
 
+
+car4 = Car_advanced()
+print("\n" + "Model =" + car4.model)
+car4.price = 1000
+# ca4.price = -1 # This will raise an error
+car5 = Car_advanced("mazda", "mx5", "red", 2013, 1000)
+print("\n" + "Model =" + car5.model)
+
+
+car6 = Car_adv2("bmw", "m4", "green", 2010, 45000)
+print("\n" + "Model =" + car6.model)
+print("\n"+"Car:"+ str(car6) + "\n")
+
+
+fh = open("cars.csv", "r")
+cars_data = fh.readlines()
+cars_data.pop(0)
+cars_list = []
+for rawstring in cars_data:
+    make,model,color,year,price = rawstring.split(",")
+    cars_list.append(Car_adv3(make,model,color,int(year),float(price)))
+
+cars_list.sort(key = lambda car: car.price)
+print(*cars_list, sep="\n")
