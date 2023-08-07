@@ -70,6 +70,35 @@ class Vector:
     def __call__(self):
         print("hello i was called")
 
+
+################################################################
+class Person2:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    
+    def __repr__(self):
+        return f"Person('name={self.name}', age={self.age})"
+    
+    def __eq__(self, other):
+        return self.name == other.name and self.age == other.age
+
+# Using a dataclass
+from dataclasses import dataclass
+
+@dataclass
+class Person3:
+    name: str
+    age: int
+
+
+#######################################################################
+""" Why python has no REAL PRIVATE Methods """
+class User:
+    def __foo(self):
+        print("Hello")
+
+
 # this is how you call the init method
 # https://youtu.be/KSiRzuSx120
 if __name__ == "__main__":
@@ -105,3 +134,24 @@ if __name__ == "__main__":
     print(len(v7))
     # in python you call objects like functions, for example like below
     v7()
+
+
+    #dataclass
+    print("\n")
+    p1 = Person2("Patrick", 31)
+    print(p1)
+    p2 = Person2("John", 21)
+    print(p1 == p2)
+    print("\n")
+
+    p3 = Person3("Patrick", 31)
+    print(p3)
+    p4 = Person3("John", 21)
+    print(p3 == p4)
+    print("\n")
+
+    
+    # display of private method
+    user = User()
+    # user.__foo()
+    user._User__foo()
