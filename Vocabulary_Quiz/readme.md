@@ -1,6 +1,6 @@
 # Vocabulary quiz
 
-Final version: Quiz_advanced_OOP.py
+Final version: **Quiz_advanced_OOP.py**
 
 The Vocabulary Quiz Game is an interactive application that offers users the opportunity to enhance their vocabulary while enjoying an engaging gaming experience. The game is designed with a user-friendly graphical interface created using the Tkinter library in Python.
 

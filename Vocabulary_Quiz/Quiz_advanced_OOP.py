@@ -2,8 +2,6 @@ import random
 import time
 import tkinter as tk
 from tkinter import *
-import copy
-
 
 class VocabularyQuiz:
     def __init__(self, root):
@@ -18,8 +16,8 @@ class VocabularyQuiz:
         # Initialize with 3 lives
         self.lives = 3  
 
-        # Initialize the time_limit variable to 120 seconds
-        self.time_limit = 120
+        # Initialize the time_limit variable to 60 seconds
+        self.time_limit = 60
 
         self.word_dict = self.process_csv_and_return_dict()
         self.create_menu_ui()
@@ -70,9 +68,9 @@ class VocabularyQuiz:
         self.game_lost_label = tk.Label(self.game_lost_frame, text=f"Game over, score: {score}", font=("Helvetica", 25))
         self.game_lost_label.pack()
         self.game_lost_playAgain_button = tk.Button(self.game_lost_frame, text="Play Again", font=("Helvetica", 15), command=lambda : self.play_again(game_mode))
-        self.game_lost_playAgain_button.pack()
+        self.game_lost_playAgain_button.pack(pady=50)
         self.game_lost_menu_button = tk.Button(self.game_lost_frame, text="Go to Menu", font=("Helvetica", 15), command=lambda : self.to_menu())
-        self.game_lost_menu_button.pack()
+        self.game_lost_menu_button.pack(pady=50)
 
     def game_lost(self, score, game_mode):
         self.game_frame.pack_forget()
@@ -89,7 +87,7 @@ class VocabularyQuiz:
             self.selection = tk.IntVar(master=self.root, value=None)
             self.create_game_ui()
 
-            self.time_score_label["text"] = f"Lives:   {time_remaining}     Score:    {score}"
+            self.time_score_label["text"] = f"Time Remaining:   {time_remaining}     Score:    {score}"
 
             while time_remaining > 0:
                 word, definition, choice_list = self.get_question(wd_list)
@@ -98,10 +96,9 @@ class VocabularyQuiz:
                 root.wait_variable(self.selection)
                 if self.check_answer(definition, choice_list) is True:
                     score += 1
-                    self.time_score_label["text"] = f"Lives:   {time_remaining}     Score:    {score}"
+                    self.time_score_label["text"] = f"Time Remaining:   {time_remaining}     Score:    {score}"
                 else:
-                    lives -= 1
-                    self.time_score_label["text"] = f"Lives:   {time_remaining}     Score:    {score}"
+                    self.time_score_label["text"] = f"Time Remaining:   {time_remaining}     Score:    {score}"
             
             self.game_lost(score, 0)
     
@@ -142,7 +139,7 @@ class VocabularyQuiz:
 
         # Initialize an empty list to store answer choices.
         choice_list = []
-        
+
         # Generate four random word-definition pairs to use as answer choices.
         for _ in range(4):
             # Get a random word and its corresponding definition, removing it from the list.
