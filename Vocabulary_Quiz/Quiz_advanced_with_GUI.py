@@ -13,9 +13,13 @@ def get_def_and_pop(word_list, word_dict):
     definition = word_dict.get(word)
     return word, definition
 
+
 def play_mode_with_lives(word_dict, lives):
+    # display lives
     score = 0
-    
+    lives_score_label = tk.Label(root, text=f"Lives : {lives},     Score :  {score}" , font=("Helvetica", 16))
+    lives_score_label.pack(anchor="ne", padx=10, pady=10)  # Adjust padx and pady as needed
+
     while lives > 0:
         wd_list = list(word_dict)
         choice_list = []
@@ -24,21 +28,23 @@ def play_mode_with_lives(word_dict, lives):
             choice_list.append(definition)
         random.shuffle(choice_list)
         
+        # the word that we are trying to find its meaning
         word = tk.Label(root, text=word, font=("Helvetica", 25))
         word.pack(pady = 10)
+
+        # gets the 4 different meanings 
         for idx, choice in enumerate(choice_list):
             choice_label = tk.Label(root, text=f"{idx+1}: {choice}", font=("Helvetica", 25))
-            choice_label.pack()
+            choice_label.pack(pady = 10)
+
+        entry = tk.Entry(root, width=20, font=("Helvetica", 20))
+        entry.pack(pady=5)
+        submit_button = tk.Button(root, text="Submit",font=("Helvetica", 15), command=lambda: get_lives(word_dict, entry))
+        submit_button.pack()
 
         while True:
             try:
-                entry = tk.Entry()
-                entry.pack(pady=5)
-                submit_button = tk.Button(root, text="Submit",font=("Helvetica", 15), command=lambda: get_lives(word_dict, lives_entry))
-                submit_button.pack()
-                if choice == 0:
-                    break
-                elif 1 <= choice <= 4:
+                if 1 <= entry.get() <= 4:
                     break
                 else:
                     print("\n")
@@ -251,9 +257,9 @@ if __name__ == "__main__":
 
 
     # Three buttons to show message boxes
-    message_button1 = tk.Button(root, text="Start Quiz with Lives", command=lambda: mode_selection(option=1), font=("Helvetica", 16))
-    message_button2 = tk.Button(root, text="Warning", command=lambda: mode_selection(option=2), font=("Helvetica", 16))
-    message_button3 = tk.Button(root, text="Error", command=lambda: mode_selection(option=3), font=("Helvetica", 16))
+    message_button1 = tk.Button(root, text="Play with Lives", command=lambda: mode_selection(option=1), font=("Helvetica", 16))
+    message_button2 = tk.Button(root, text="Time Attack", command=lambda: mode_selection(option=2), font=("Helvetica", 16))
+    message_button3 = tk.Button(root, text="Warmup", command=lambda: mode_selection(option=3), font=("Helvetica", 16))
  
     message_button1.pack(pady = 30)
     message_button2.pack(pady = 30)
