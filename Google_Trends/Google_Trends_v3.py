@@ -1,3 +1,4 @@
+import argparse
 import pandas as pd
 from pytrends.request import TrendReq
 import json
@@ -49,6 +50,7 @@ class GoogleTrends:
         """
         if self.trends_df is not None:
             self.trends_df.to_csv(filename, index=False)
+            print(f"Data exported to {filename}")
         else:
             print("Trend data is not available. Fetch data first.")
 
@@ -61,6 +63,7 @@ class GoogleTrends:
         """
         if self.trends_df is not None:
             self.trends_df.to_excel(filename, index=False)
+            print(f"Data exported to {filename}")
         else:
             print("Trend data is not available. Fetch data first.")
 
@@ -76,31 +79,33 @@ class GoogleTrendsEncoder(json.JSONEncoder):
             }
         return super().default(obj)
 
-# Creating an instance of GoogleTrends class
-CR7 = GoogleTrends(kw_list=['Cristiano Ronaldo', 'CR7'], timeframe='today 5-d', geo='UK')
+def main():
+    parser = argparse.ArgumentParser(description="Google Trends Data Fetcher and Exporter")
+    parser.add_argument("action", choices=["fetch", "export_csv", "export_excel"], help="Action to perform")
+    parser.add_argument("--kw_list", nargs="+", help="List of keywords")
+    parser.add_argument("--timeframe", help="Timeframe for the data")
+    parser.add_argument("--geo", help="Geographical location")
+    parser.add_argument("--filename", help="Output filename for export")
 
-# Fetch data and convert it to a DataFrame
-CR7.fetch_data()
-CR7.convert_to_dataframe()
-CR7.print_dataframe()
+    args = parser.parse_args()
 
-# Getting the 20 most trending keywords in the UK of the last 5 days
-uk_trending_5_days = CR7.get_trending_keywords_uk_5_days()
+    if args.action == "fetch":
+        trends = GoogleTrends(args.kw_list, args.timeframe, args.geo)
+        trends.fetch_data()
+        trends.convert_to_dataframe()
+        trends.print_dataframe()
+    elif args.action == "export_csv":
+        if args.filename:
+            trends = GoogleTrends(args.kw_list, args.timeframe, args.geo)
+            trends.export_to_csv(args.filename)
+        else:
+            print("Please provide a filename for exporting to CSV.")
+    elif args.action == "export_excel":
+        if args.filename:
+            trends = GoogleTrends(args.kw_list, args.timeframe, args.geo)
+            trends.export_to_excel(args.filename)
+        else:
+            print("Please provide a filename for exporting to Excel.")
 
-# Export the data to a CSV file
-CR7.export_to_csv('cr7_trends.csv')
-
-# Export the data to an Excel file
-CR7.export_to_excel('cr7_trends.xlsx')
-
-# Getting the 20 most trending keywords worldwide of the last 5 days
-worldwide_trending_5_days = CR7.get_trending_keywords_worldwide_5_days()
-print(worldwide_trending_5_days)
-
-# Getting the 20 most trending keywords worldwide of the last 30 days
-worldwide_trending_30_days = CR7.get_trending_keywords_worldwide_30_days()
-print(worldwide_trending_30_days)
-
-# Getting the 20 most trending keywords worldwide of the last 2 months
-worldwide_trending_2_months = CR7.get_trending_keywords_worldwide_2_months()
-print(worldwide_trending_2_months)
+if __name__ == "__main__":
+    main()
