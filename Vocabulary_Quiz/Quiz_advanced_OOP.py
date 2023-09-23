@@ -25,24 +25,52 @@ class VocabularyQuiz:
         self.create_ui()
 
     def create_game_ui(self):
-        self.lives_score_label = tk.Label(root, font=("Helvetica", 16))
+        # game frame, its the frame inside the root frame
+        self.game_frame = tk.Frame(root)
+        # the root of lives_score_label is game_frame
+        self.lives_score_label = tk.Label(self.game_frame, font=("Helvetica", 16))
         self.lives_score_label.pack(anchor="ne", padx=10, pady=10)  # Adjust padx and pady as needed
 
-        self.word_label = tk.Label(root, font=("Helvetica", 25))
+        self.word_label = tk.Label(self.game_frame, font=("Helvetica", 25))
         self.word_label.pack(pady = 10)
 
         self.choice_label_list = []
         for i in range(0,4):
-            self.choice_label_list.append(tk.Label(root, font=("Helvetica", 25)))
+            self.choice_label_list.append(tk.Label(self.game_frame, font=("Helvetica", 25)))
             self.choice_label_list[i].pack(pady = 10)
         
-        self.entry = tk.Entry(root, width=20, font=("Helvetica", 20))
+        self.entry = tk.Entry(self.game_frame, width=20, font=("Helvetica", 20))
         self.entry.pack(pady=5)
 
-        submit_button = tk.Button(root, text="Submit",font=("Helvetica", 15), command=lambda: self.set_input(None))
+        submit_button = tk.Button(self.game_frame, text="Submit",font=("Helvetica", 15), command=lambda: self.set_input(None))
         submit_button.pack()
 
         self.root.bind('<Return>', self.set_input)
+        
+        self.game_frame.pack(fill='both')
+
+    def play_again(self, game_mode):
+        self.game_lost_frame.pack_forget()
+        self.game_lost_frame.destroy()
+        if game_mode == 0:
+            self.play_mode_with_lives()
+    
+    def create_game_lost_ui(self, score, game_mode):
+        self.game_lost_frame = tk.Frame(self.root)
+        self.game_lost_frame.pack()
+        self.game_lost_label = tk.Label(self.game_lost_frame, text=f"Game over, score: {score}", font=("Helvetica", 25))
+        self.game_lost_label.pack()
+        self.game_lost_playAgain_button = tk.Button(self.game_lost_frame, text="Play Again", font=("Helvetica", 15), command=lambda : self.play_again(game_mode))
+        self.game_lost_playAgain_button.pack()
+        #self.game_lost_menu_button = tk.Button(self.game_lost_frame, text="Go to Menu", font=("Helvetica", 15), command=labda : self.lost_to_menu)
+        #self.game_lost_menu_button.pack()
+
+
+    def game_lost(self, score, game_mode):
+        self.game_frame.pack_forget()
+        self.game_frame.destroy()
+        self.root.unbind('<Return>')
+        self.create_game_lost_ui(score, game_mode)
 
     def play_mode_with_lives(self):
         wd_list = list(self.word_dict)
@@ -67,7 +95,7 @@ class VocabularyQuiz:
                 lives -= 1
                 self.lives_score_label["text"] = f"Lives:   {lives}     Score:    {score}"
         
-        print("no more lives remaining")
+        self.game_lost(score, 0)
 
     def check_answer(self, definition, choice_list):
         return choice_list[self.selection.get() - 1] == definition
@@ -91,9 +119,15 @@ class VocabularyQuiz:
         self.entry.delete(0, END)
         self.entry.focus()
 
-    def set_input(self, event=None):
-        self.selection.set(self.entry.get())
-
+    def set_input(self, event=None): 
+        self
+        try:
+            input_value = int(self.entry.get())
+            if input_value in (1, 2, 3, 4):
+                self.selection.set(input_value)
+        except ValueError:
+            # Handle the case where the input is not a valid integer (e.g., letters or special characters or number not 1 2 3 4).
+            pass
 
     def create_ui(self):
         # Create UI elements and layout
