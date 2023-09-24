@@ -1,6 +1,6 @@
 import pandas as pd
 from pytrends.request import TrendReq
-
+import json
 
 class GoogleTrends:
     def __init__(self, kw_list, timeframe, geo):
@@ -14,15 +14,18 @@ class GoogleTrends:
     def fetch_data(self):
         self.pytrends.build_payload(self.kw_list, timeframe=self.timeframe, geo=self.geo)
         self.trends_data = self.pytrends.interest_over_time()
+        self.convert_to_dataframe()
 
     def convert_to_dataframe(self):
-        self.trends_df = pd.DataFrame(self.trends_data)
+        if self.trends_data is not None:
+            self.trends_df = pd.DataFrame(self.trends_data)
 
     def print_dataframe(self):
-        print(self.trends_df)
+        if self.trends_df is not None:
+            print(self.trends_df)
 
     def get_trending_keywords_uk_5_days(self):
-        # self.pytrends.build_payload(kw_list=[], timeframe='now 5-d', geo='GB')
+        self.pytrends.build_payload(kw_list=[], timeframe='now 5-d', geo='GB')
         return self.pytrends.trending_searches(pn='united_kingdom')
 
     def get_trending_keywords_worldwide_5_days(self):
@@ -37,70 +40,67 @@ class GoogleTrends:
         self.pytrends.build_payload(kw_list=[], timeframe='today 2-m', geo='')
         return self.pytrends.trending_searches(pn='worldwide')
 
+    def export_to_csv(self, filename):
+        """
+        Export the trend data to a CSV file.
 
-class GoogleTrends2:
-    
-    def __init__(self):
-        self.pytrends = TrendReq()
-    
-    def get_interest_over_time(self, kw_list, timeframe='today 5-y', geo=''):
-        self.pytrends.build_payload(kw_list=kw_list, timeframe=timeframe, geo=geo)
-        trends_data = self.pytrends.interest_over_time()
-        trends_df = pd.DataFrame(trends_data)
-        return trends_df
-    
-    def get_trending_keywords_uk_5_days(self):
-        self.pytrends.build_payload(kw_list=[], timeframe='now 5-d', geo='GB')
-        trending_searches = self.pytrends.trending_searches(pn='united_kingdom')
-        trending_searches_df = pd.DataFrame(trending_searches)
-        trending_searches_df.to_csv('trending_keywords_uk_5_days.csv', index=False)
-        return trending_searches_df
-    
-    def get_trending_keywords_worldwide_5_days(self):
-        self.pytrends.build_payload(kw_list=[], timeframe='now 5-d', geo='')
-        trending_searches = self.pytrends.trending_searches()
-        trending_searches_df = pd.DataFrame(trending_searches)
-        trending_searches_df.to_csv('trending_keywords_worldwide_5_days.csv', index=False)
-        return trending_searches_df
-    
-    def get_trending_keywords_worldwide_30_days(self):
-        self.pytrends.build_payload(kw_list=[], timeframe='today 1-m', geo='')
-        trending_searches = self.pytrends.trending_searches()
-        trending_searches_df = pd.DataFrame(trending_searches)
-        trending_searches_df.to_csv('trending_keywords_worldwide_30_days.csv', index=False)
-        return trending_searches_df
-    
-    def get_trending_keywords_worldwide_2_months(self):
-        self.pytrends.build_payload(kw_list=[], timeframe='today 2-m', geo='')
-        trending_searches = self.pytrends.trending_searches()
-        trending_searches_df = pd.DataFrame(trending_searches)
-        trending_searches_df.to_csv('trending_keywords_worldwide_2_months.csv', index=False)
-        return trending_searches_df
+        Args:
+            filename (str): The name of the CSV file to save.
+        """
+        if self.trends_df is not None:
+            self.trends_df.to_csv(filename, index=False)
+        else:
+            print("Trend data is not available. Fetch data first.")
+
+    def export_to_excel(self, filename):
+        """
+        Export the trend data to an Excel file.
+
+        Args:
+            filename (str): The name of the Excel file to save.
+        """
+        if self.trends_df is not None:
+            self.trends_df.to_excel(filename, index=False)
+        else:
+            print("Trend data is not available. Fetch data first.")
+
+class GoogleTrendsEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, GoogleTrends):
+            # Exclude the pytrends and trends_data attributes
+            return {
+                'kw_list': obj.kw_list,
+                'timeframe': obj.timeframe,
+                'geo': obj.geo,
+                'trends_df': obj.trends_df.to_dict() if obj.trends_df is not None else None
+            }
+        return super().default(obj)
 
 # Creating an instance of GoogleTrends class
-gt = GoogleTrends(kw_list=['Cristiano Ronaldo', 'CR7'], timeframe='today 1-y', geo='')
+CR7 = GoogleTrends(kw_list=['Cristiano Ronaldo', 'CR7'], timeframe='today 5-d', geo='UK')
 
-# Fetching the data
-gt.fetch_data()
-
-# Converting the data to a DataFrame
-gt.convert_to_dataframe()
-
-# Printing the DataFrame
-gt.print_dataframe()
+# Fetch data and convert it to a DataFrame
+CR7.fetch_data()
+CR7.convert_to_dataframe()
+CR7.print_dataframe()
 
 # Getting the 20 most trending keywords in the UK of the last 5 days
-uk_trending_5_days = gt.get_trending_keywords_uk_5_days()
-print(uk_trending_5_days)
+uk_trending_5_days = CR7.get_trending_keywords_uk_5_days()
+
+# Export the data to a CSV file
+CR7.export_to_csv('cr7_trends.csv')
+
+# Export the data to an Excel file
+CR7.export_to_excel('cr7_trends.xlsx')
 
 # Getting the 20 most trending keywords worldwide of the last 5 days
-worldwide_trending_5_days = gt.get_trending_keywords_worldwide_5_days()
+worldwide_trending_5_days = CR7.get_trending_keywords_worldwide_5_days()
 print(worldwide_trending_5_days)
 
 # Getting the 20 most trending keywords worldwide of the last 30 days
-worldwide_trending_30_days = gt.get_trending_keywords_worldwide_30_days()
+worldwide_trending_30_days = CR7.get_trending_keywords_worldwide_30_days()
 print(worldwide_trending_30_days)
 
 # Getting the 20 most trending keywords worldwide of the last 2 months
-worldwide_trending_2_months = gt.get_trending_keywords_worldwide_2_months()
+worldwide_trending_2_months = CR7.get_trending_keywords_worldwide_2_months()
 print(worldwide_trending_2_months)
