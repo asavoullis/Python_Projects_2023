@@ -45,7 +45,7 @@ class LoggingDict(dict):
     # in just a few lines of code, super allowed us to have fully functioning dictionary that also gives us logging messages
 
     
-class B(A):
+class B():
     def f(self):
         print("B.f", self)
         super().f()
