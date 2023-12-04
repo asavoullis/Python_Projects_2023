@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime,date
 import os
+from sqlalchemy import inspect
 
 # Ensure 'instance' directory exists before removing it
 if os.path.exists("instance"):
@@ -115,9 +116,22 @@ def print_database_entries_old():
         print(Owner.query.all())
         print(Pet.query.all())
 
+def print_schema():
+    """
+    Prints the schema of the database tables.
+    """
+    with app.app_context():
+        inspector = inspect(db.engine)
+        for table_name in inspector.get_table_names():
+            print(f"Table: {table_name}")
+            columns = inspector.get_columns(table_name)
+            for column in columns:
+                print(f"    {column['name']}: {column['type']}")
+            print()
 
 
 create_and_add_data()
 print_pet_owners()
 print_database_entries()
 print_database_entries_old()
+print_schema()
