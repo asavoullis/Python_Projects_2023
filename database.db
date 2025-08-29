@@ -1,0 +1,40 @@
+
+-- Create the user table
+CREATE TABLE user (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    surname VARCHAR(50) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    telephone_number VARCHAR(20) NOT NULL,
+    country_code VARCHAR(5) NOT NULL,
+    post_code VARCHAR(20) NOT NULL,
+    email VARCHAR(120) UNIQUE NOT NULL,
+    date_of_birth DATE NOT NULL,
+    is_active BOOLEAN DEFAULT 1,
+    registration_date DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create the account table
+CREATE TABLE account (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    account_number VARCHAR(20) UNIQUE NOT NULL,
+    balance FLOAT DEFAULT 0.0 NOT NULL,
+    user_id INTEGER NOT NULL,
+    account_type VARCHAR(20) NOT NULL,
+    currency VARCHAR(3) DEFAULT 'USD',
+    is_active BOOLEAN DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    last_updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    credit FLOAT DEFAULT 0.0,
+    debit FLOAT DEFAULT 0.0,
+    FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+-- Insert sample data into the user table
+INSERT INTO user (username, first_name, surname, address, telephone_number, country_code, post_code, email, date_of_birth)
+VALUES ('john_doe', 'John', 'Doe', '123 Main St', '123-456-7890', 'US', '12345', 'john@example.com', '1990-01-01');
+
+-- Insert sample data into the account table
+INSERT INTO account (account_number, balance, user_id, account_type)
+VALUES ('1234567890', 1000.0, 1, 'Savings');
